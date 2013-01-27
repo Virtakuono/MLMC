@@ -24,7 +24,7 @@ emptysparse = @(x,y) speye(x,y)-speye(x,y); %kludge...
 tc = clock;
 
 L = 4 % the maximum level
-m1 = 1e5 % number of paths on the coarsest grid
+m1 = 1e4 % number of paths on the coarsest grid
 m2 = 2 % number of time steps on the coarsest grid
 m3 = 2 % how much to refine
 dim = 5 % dimension
@@ -40,17 +40,17 @@ K = mean(X_0) %strike
 
 [su sv] = eig(sig);
 
-
 a = @(x,t) x.*r %drift part
 %a = @(x,t) x.*r.*(1+0.5*cos(50*t));
 %b = @(x,t) sig.*x % volatility part
 %b = @(x,t) sig.*x.*(1+0.5*cos(50*t))
+
+
 b = @(x,t) sig*x
 g = @(x,t) exp(-r*T)*max(mean(x(:,end))-K,0);
-%g = @(x,t) exp(-r*T)*max(max())
-%g = @(x,t) x(:,end)
-%g = @(x,t) H(x(:,end)-K)
-%g = @(x,t) [exp(-r*T)*H(x(:,end)-40);]
+
+
+
 xmin = 1e-1;
 xmax = 1.5;
 xvals = linspace(xmin,xmax,15);    % values at which to evaluate the CDF that is being estimated
@@ -243,17 +243,15 @@ grid on
 xlabel 'x'
 ylabel '\Psi (x)'
 
-
 stat_error = max(staterrs(:,end))
 bias_error = max(rerrs(:,end))
 interperror = max(interperror)
 total_error = max(abs(refined_pointwise_errors+interperror))
 TOL
 
-estlev = 1
+
 maxrerrs = max(rerrs)*(abs(1-1/(2*m3)));
 hC = abs((T/m2)*(1-2*m3))*maxrerrs(2);
-%suggested_L = max(1,ceil(-1* log2(TOL/3/hC/(T/m2))/log2(2*m3)))
 suggested_L = ceil(L - log(TOL/3/bias_error)/log(2*m3))
 varg0 = max(staterrs(:,1));
 varg1 = max(staterrs(:,2)-staterrs(:,1));
@@ -266,7 +264,7 @@ suggested_N = ceil(sqrt(3*interperror*length(xvals)^2/TOL))
 
 clear finestep increments W t W_eff t_eff dt l l2 k path gp hs Xs gs Ws
 clear zerolevel corrections tv plotn plotx Ws_eff Xs_eff obs ts_l ts_eff
-clear variances ts level jump lw %hC estlev maxrerrs deltax
+clear variances ts level jump lw
 
 tc2 = clock;
 sprintf('Done. Time elapsed %d seconds.',ceil(etime(tc2,tc)))
