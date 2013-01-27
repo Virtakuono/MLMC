@@ -252,7 +252,7 @@ TOL
 
 maxrerrs = max(rerrs)*(abs(1-1/(2*m3)));
 hC = abs((T/m2)*(1-2*m3))*maxrerrs(2);
-suggested_L = ceil(L - log(TOL/3/bias_error)/log(2*m3))
+suggested_L = max(ceil(L - log(TOL/3/bias_error)/log(2*m3)),1 )
 varg0 = max(staterrs(:,1));
 varg1 = max(staterrs(:,2)-staterrs(:,1));
 suggested_m1 = m1*stat_error^2*9/TOL/TOL
